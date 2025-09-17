@@ -1,0 +1,43 @@
+name: Bump Version and Create Draft Release
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  bump-and-release:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Bump patch version
+        id: version
+        run: |
+          NEW_TAG=$(npm version patch -m "chore: bump version to %s [skip ci]")
+          echo "tag=${NEW_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Push changes and tag
+        run: |
+          git push origin HEAD:main --follow-tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Draft Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          draft: true
+          generate_release_notes: true

@@ -1,10 +1,7 @@
-export type Country = 
-'AT' | 'BE' | 'BG' | 'CY' | 'CZ' | 'DE' | 'DK' | 'EE' | 'EL' | 'ES' | 'FI' | 'FR' | 'HR' | 'HU' | 'IE' | 'IT' | 'LT' | 'LU' | 'LV' | 'MT' | 'NL' | 'PL' | 'PT' | 'RO' | 'SE' | 'SI' | 'SK' | 'XI'
+export const EU_COUNTRIES = [
+    'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'EL', 'ES', 'FI', 'FR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK', 'XI'
 
-export interface VatValidationRequest {
-    countryCode: string
-    vatNumber: string  
-}
+] as const
 
 export interface VatValidationResponse {
     countryCode: string
@@ -15,18 +12,29 @@ export interface VatValidationResponse {
     address?: string
 }
 
-export interface VatErrorResponse {
-    actionSucceed: boolean
-    errorWrappers: Array<{
-        error: string
-        message: string
-    }>
-}
-
-export interface VatClientConfig {
+/**
+ * Configuration options for VAT validation
+ */
+export interface ValidationOptions {
+    /** 
+     * Request timeout in milliseconds 
+     * @default 10000 
+     */
     timeout?: number
+    
+    /** 
+     * Delay between retry attempts in milliseconds 
+     * @default 1000 
+     */
     retryDelay?: number
-    returnFullResponse?: boolean
+    
+    /** 
+     * Whether to return the full validation response object or just a boolean
+     * - `true`: Returns VatValidationResponse object with all details
+     * - `false`: Returns boolean indicating validity
+     * @default true 
+     */
+    fullResponse?: boolean
 }
 
 export class VatValidationError extends Error {

@@ -1,4 +1,4 @@
-export { VatClient, validateVatNumber } from './vies-rest'
+export { validateVatNumber } from './vies-rest'
+export { ValidationOptions, VatValidationResponse, VatValidationError } from './types'
 
-// Default export for convenience
 export { validateVatNumber as default } from './vies-rest'

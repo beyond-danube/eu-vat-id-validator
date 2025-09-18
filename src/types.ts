@@ -1,7 +1,7 @@
 export const EU_COUNTRIES = [
     'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'EL', 'ES', 'FI', 'FR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK', 'XI'
 
-] as const
+]
 
 export interface VatValidationResponse {
     countryCode: string
@@ -37,9 +37,22 @@ export interface ValidationOptions {
     fullResponse?: boolean
 }
 
+export interface ViesError {
+    actionSucceed: boolean
+    errorWrappers: {
+        error: string
+        message: string
+    }[]
+}
+
 export class VatValidationError extends Error {
-    constructor(message: string, public statusCode?: number) {
+
+    errorDetails?: ViesError
+
+    constructor(message: string, errorDetails?: ViesError) {
         super(message)
         this.name = 'VatValidationError'
+        this.errorDetails = errorDetails
+        Object.setPrototypeOf(this, VatValidationError.prototype);
     }
 }

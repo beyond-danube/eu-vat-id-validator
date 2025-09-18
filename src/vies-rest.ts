@@ -2,7 +2,8 @@ import {
     EU_COUNTRIES,
     ValidationOptions, 
     VatValidationError, 
-    VatValidationResponse 
+    VatValidationResponse, 
+    ViesError
 } from "./types"
 
 const DEFAULT_CONFIG: Required<ValidationOptions> = {
@@ -15,6 +16,16 @@ const BASE_URL = 'https://ec.europa.eu/taxation_customs/vies/rest-api/check-vat-
 
 function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+function combineErrorMessageAndError(message: string, errorDetails: ViesError) {
+    let errorDetailsMessage = ''
+
+    for (const errorWrapper of errorDetails.errorWrappers) {
+        errorDetailsMessage += `${errorWrapper.error}: ${errorWrapper.message}\n`
+    }
+
+    return `${message}\n\n${errorDetailsMessage}`
 }
 
 export async function validateVatNumber(countryCode: string, vatNumber: string): Promise<VatValidationResponse>
@@ -31,8 +42,8 @@ export async function validateVatNumber(
     const config = { ...DEFAULT_CONFIG, ...options }
     
     // Validate country code against supported countries
-    if (!(EU_COUNTRIES as readonly string[]).includes(countryCode)) {
-        throw new VatValidationError(`Country code '${countryCode}' is not supported. Supported countries: ${EU_COUNTRIES.join(', ')}`)
+    if (!EU_COUNTRIES.includes(countryCode)) {
+        throw new VatValidationError(`Country code '${countryCode}' is not supported.\nSupported countries: ${EU_COUNTRIES.join(', ')}`)
     }
     
     const request = {
@@ -41,6 +52,7 @@ export async function validateVatNumber(
     }
 
     let lastErrorMessage = `Request timeout, waited for succsess: ${config.timeout} ms`
+    let lastError: ViesError | undefined
     const startTime = Date.now()
 
     while (Date.now() - startTime < config.timeout) {
@@ -55,9 +67,13 @@ export async function validateVatNumber(
 
         if (response.ok) {
             const apiResponse = await response.json()
+
+            if(apiResponse.actionSucceed && apiResponse.actionSucceed === false) {
+                const error = apiResponse as ViesError
+                throw new VatValidationError(combineErrorMessageAndError("Vies returned status code OK, but with error", error), apiResponse)
+            }
             
             if (config.fullResponse) {
-                // Return only the fields defined in VatValidationResponse
                 const result: VatValidationResponse = {
                     countryCode: apiResponse.countryCode,
                     vatNumber: apiResponse.vatNumber,
@@ -72,8 +88,8 @@ export async function validateVatNumber(
             return apiResponse.valid
         } 
         
-        const errorResponse = await response.json()
-        lastErrorMessage = errorResponse
+        lastError = await response.json() as ViesError
+        lastErrorMessage = combineErrorMessageAndError(`Vies returned error with status code: ${response.status}`, lastError)
         
         if (Date.now() - startTime < config.timeout) {
             await sleep(config.retryDelay)
@@ -83,5 +99,5 @@ export async function validateVatNumber(
         break
     }
 
-    throw new VatValidationError(lastErrorMessage)
+    throw new VatValidationError(lastErrorMessage, lastError)
 }

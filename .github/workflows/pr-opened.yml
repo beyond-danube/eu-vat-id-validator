@@ -2,7 +2,7 @@ name: Run Tests and Comment on PR
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, edited, synchronize]
 
 jobs:
   test-and-comment:

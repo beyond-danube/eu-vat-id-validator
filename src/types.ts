@@ -41,7 +41,7 @@ export interface ViesError {
     actionSucceed: boolean
     errorWrappers: {
         error: string
-        message: string
+        message?: string
     }[]
 }
 
@@ -51,7 +51,7 @@ export interface StatusCheckResponse {
     },
     countries: {
         countryCode: string
-        availability: string
+        availability: 'Unavailable' | 'Available'
     }[]
 }
 

@@ -70,9 +70,10 @@ export async function validateVatNumber(
         if (response.ok) {
             const apiResponse = await response.json()
 
-            if(apiResponse.actionSucceed && apiResponse.actionSucceed === false) {
+            if(apiResponse.actionSucceed !== undefined && apiResponse.actionSucceed === false) {
                 lastErrorMessage = combineErrorMessageAndError("Vies returned status code OK, but with error", apiResponse)
                 lastError = apiResponse
+                continue
             }
             
             if (config.fullResponse) {
@@ -122,8 +123,5 @@ export async function checkViesServiceAvailable(countryCode: string): Promise<bo
         return false
     }
 
-    const EXPECTED_VALUE = 'Available'
-    const ACTUAL_VALUE = apiResponse.countries.find(entry => entry.countryCode === countryCode)?.availability
-
-    return ACTUAL_VALUE === EXPECTED_VALUE
+    return apiResponse.countries.find(entry => entry.countryCode === countryCode)?.availability === 'Available'
 }

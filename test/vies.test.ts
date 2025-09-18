@@ -1,6 +1,6 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
-import { validateVatNumber } from '../src/index.js'
+import { checkViesServiceAvailable, validateVatNumber } from '../src/index.js'
 import { EU_COUNTRIES } from '../src/types.js'
 
 function randomElement<T>(input: Array<T>): T {
@@ -65,4 +65,11 @@ describe('VAT valitator detects NOT VALID as expected', () => {
         assert.ok(!result)
     })
     
+})
+
+describe('Service Available', () => {
+    test('Member State Available', async() => {
+        const result = await checkViesServiceAvailable('DE')
+        assert.ok(result)
+    })
 })

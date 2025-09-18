@@ -24,6 +24,7 @@ jobs:
         id: tests
         continue-on-error: true
         run: |
+          npm ci
           npm test 2>&1 | tee test-output.log
 
       - name: Comment PR with Test Results

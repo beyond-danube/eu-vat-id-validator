@@ -26,12 +26,15 @@ describe('VAT valitator detects VALID as expected', () => {
 
     const randomValidCompany = randomElement(FORTUNE_100_EU_COMPANIES)
 
-    test('With full response', async() => {
+    console.log('Chosen Valid Company')
+    console.log(randomValidCompany)
+
+    test('Valid with full response', async() => {
         const result = await validateVatNumber(randomValidCompany.countryCode, randomValidCompany.vatNumber)
 
         assert.ok(result.valid)
     }),
-    test('With boolean response', async() => {
+    test('Valid with boolean response', async() => {
         const result = await validateVatNumber(randomValidCompany.countryCode, randomValidCompany.vatNumber, { fullResponse: false })
 
         assert.ok(result)
@@ -46,12 +49,17 @@ describe('VAT valitator detects NOT VALID as expected', () => {
         vatNumber: '123456789'
     }
 
-    test('With full response', async() => {
+    console.log('Chosen Not Valid Company')
+    console.log(randomNotValidCompany)
+
+    test('Not valid with full response', async() => {
         const result = await validateVatNumber(randomNotValidCompany.countryCode, randomNotValidCompany.vatNumber)
+
+        console.log(result)
 
         assert.ok(!result.valid)
     }),
-    test('With boolean response', async() => {
+    test('Not valid with boolean response', async() => {
         const result = await validateVatNumber(randomNotValidCompany.countryCode, randomNotValidCompany.vatNumber, { fullResponse: false })
 
         assert.ok(!result)

@@ -69,8 +69,8 @@ export async function validateVatNumber(
             const apiResponse = await response.json()
 
             if(apiResponse.actionSucceed && apiResponse.actionSucceed === false) {
-                const error = apiResponse as ViesError
-                throw new VatValidationError(combineErrorMessageAndError("Vies returned status code OK, but with error", error), apiResponse)
+                lastErrorMessage = combineErrorMessageAndError("Vies returned status code OK, but with error", apiResponse)
+                lastError = apiResponse
             }
             
             if (config.fullResponse) {

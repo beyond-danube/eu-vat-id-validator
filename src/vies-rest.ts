@@ -1,5 +1,6 @@
 import { 
     EU_COUNTRIES,
+    StatusCheckResponse,
     ValidationOptions, 
     VatValidationError, 
     VatValidationResponse, 
@@ -13,6 +14,7 @@ const DEFAULT_CONFIG: Required<ValidationOptions> = {
 }
 
 const BASE_URL = 'https://ec.europa.eu/taxation_customs/vies/rest-api/check-vat-number'
+const BASE_URL_CHECK = 'https://ec.europa.eu/taxation_customs/vies/rest-api/check-status'
 
 function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms))
@@ -100,4 +102,28 @@ export async function validateVatNumber(
     }
 
     throw new VatValidationError(lastErrorMessage, lastError)
+}
+
+export async function checkViesServiceAvailable(countryCode: string): Promise<boolean> {
+
+    if (!EU_COUNTRIES.includes(countryCode)) {
+        throw new VatValidationError(`Country code '${countryCode}' is not supported.\nSupported countries: ${EU_COUNTRIES.join(', ')}`)
+    }
+
+    const response = await fetch(BASE_URL_CHECK)
+
+    if(!response.ok) {
+        return false
+    }
+
+    const apiResponse = await response.json() as StatusCheckResponse
+
+    if(!apiResponse.vow.available) {
+        return false
+    }
+
+    const EXPECTED_VALUE = 'Available'
+    const ACTUAL_VALUE = apiResponse.countries.find(entry => entry.countryCode === countryCode)?.availability
+
+    return ACTUAL_VALUE === EXPECTED_VALUE
 }

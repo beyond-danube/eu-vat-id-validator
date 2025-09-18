@@ -45,6 +45,16 @@ export interface ViesError {
     }[]
 }
 
+export interface StatusCheckResponse {
+    vow: {
+        available: boolean
+    },
+    countries: {
+        countryCode: string
+        availability: string
+    }[]
+}
+
 export class VatValidationError extends Error {
 
     errorDetails?: ViesError

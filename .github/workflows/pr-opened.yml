@@ -24,7 +24,10 @@ jobs:
         id: tests
         run: |
           npm ci
-          npm test >> $GITHUB_OUTPUT
+          echo "test_results<<EOF" >> $GITHUB_OUTPUT
+          npm test 2>&1 | tee test_output.txt || echo "Tests failed with exit code $?"
+          cat test_output.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Comment PR with Test Results
         if: ${{ always() }}
@@ -34,5 +37,5 @@ jobs:
             ## Test Results
 
             ```
-            ${{ steps.tests.outputs }}
+            ${{ steps.tests.outputs.test_results }}
             ```

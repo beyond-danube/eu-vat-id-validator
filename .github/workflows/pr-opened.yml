@@ -25,7 +25,7 @@ jobs:
         run: |
           npm ci
           echo "test_results<<EOF" >> $GITHUB_OUTPUT
-          npm test 2>&1 | tee test_output.txt || echo "Tests failed with exit code $?"
+          npm test 2>&1 | tee test_output.txt
           cat test_output.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 

@@ -1,5 +1,5 @@
 {
-    "name": "eu-vat-id",
+    "name": "eu-vat-id-validator",
     "version": "1.0.1",
     "description": "TypeScript wrapper library for EU VAT ID validation using the VIES REST API",
     "main": "dist/index.js",
@@ -9,7 +9,8 @@
         "LICENSE"
     ],
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "test": "npm run build && node --test dist/test/*.js"
     },
     "keywords": [
         "vat",
@@ -30,6 +31,7 @@
     },
     "homepage": "https://github.com/beyond-danube/eu-vat-id#readme",
     "devDependencies": {
+        "@types/node": "^24.5.2",
         "typescript": "^5.0.0"
     },
     "engines": {

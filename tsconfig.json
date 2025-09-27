@@ -7,11 +7,10 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "outDir": "./dist",
-        "rootDir": "./src",
         "declaration": true,
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "test/**/*"],
     "exclude": ["node_modules", "dist"]
 }

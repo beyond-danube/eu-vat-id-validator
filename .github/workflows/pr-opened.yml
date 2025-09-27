@@ -1,0 +1,45 @@
+name: Run Tests and Comment on PR
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  test-and-comment:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run Tests
+        id: tests
+        run: |
+          npm ci
+          npm test 2>&1 | tee test_output.txt
+
+      - name: Parse Test Results
+        id: parse-results
+        if: ${{ always() }}
+        run: |
+          echo "test_results<<EOF" >> $GITHUB_OUTPUT
+          set +e
+          node .github/workflows/scripts/parse-test-results.js test_output.txt >> $GITHUB_OUTPUT 2>&1
+          PARSE_EXIT_CODE=$?
+          echo "EOF" >> $GITHUB_OUTPUT
+          exit $PARSE_EXIT_CODE
+
+      - name: Comment PR with Test Results
+        if: ${{ always() }}
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            ${{ steps.parse-results.outputs.test_results }}

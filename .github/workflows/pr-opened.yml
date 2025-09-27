@@ -25,9 +25,16 @@ jobs:
         run: |
           npm ci
           echo "test_results<<EOF" >> $GITHUB_OUTPUT
+          set +e
           npm test 2>&1 | tee test_output.txt
+          TEST_EXIT_CODE=$?
           cat test_output.txt >> $GITHUB_OUTPUT
+          if [ $TEST_EXIT_CODE -ne 0 ]; then
+            echo "" >> $GITHUB_OUTPUT
+            echo "Tests failed with exit code $TEST_EXIT_CODE" >> $GITHUB_OUTPUT
+          fi
           echo "EOF" >> $GITHUB_OUTPUT
+          exit $TEST_EXIT_CODE
 
       - name: Comment PR with Test Results
         if: ${{ always() }}

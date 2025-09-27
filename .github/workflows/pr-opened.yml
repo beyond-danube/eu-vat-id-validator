@@ -29,11 +29,13 @@ jobs:
       - name: Parse Test Results
         id: parse-results
         if: ${{ always() }}
-        continue-on-error: true
         run: |
           echo "test_results<<EOF" >> $GITHUB_OUTPUT
+          set +e
           node .github/workflows/scripts/parse-test-results.js test_output.txt >> $GITHUB_OUTPUT 2>&1
+          PARSE_EXIT_CODE=$?
           echo "EOF" >> $GITHUB_OUTPUT
+          exit $PARSE_EXIT_CODE
 
       - name: Comment PR with Test Results
         if: ${{ always() }}

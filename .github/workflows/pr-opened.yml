@@ -32,9 +32,12 @@ jobs:
           if [ $TEST_EXIT_CODE -ne 0 ]; then
             echo "" >> $GITHUB_OUTPUT
             echo "Tests failed with exit code $TEST_EXIT_CODE" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            echo "::error::Tests failed with exit code $TEST_EXIT_CODE"
+            exit 1
+          else
+            echo "EOF" >> $GITHUB_OUTPUT
           fi
-          echo "EOF" >> $GITHUB_OUTPUT
-          exit $TEST_EXIT_CODE
 
       - name: Comment PR with Test Results
         if: ${{ always() }}

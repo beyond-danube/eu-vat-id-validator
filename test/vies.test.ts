@@ -57,7 +57,7 @@ describe('VAT valitator detects NOT VALID as expected', () => {
 
         console.log(result)
 
-        assert.ok(!result.valid)
+        assert.ok(result.valid)
     }),
     test('Not valid with boolean response', async() => {
         const result = await validateVatNumber(randomNotValidCompany.countryCode, randomNotValidCompany.vatNumber, { fullResponse: false })

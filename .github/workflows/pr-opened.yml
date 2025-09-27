@@ -29,13 +29,15 @@ jobs:
       - name: Parse Test Results
         id: parse-results
         if: ${{ always() }}
+        continue-on-error: true
         run: |
           echo "test_results<<EOF" >> $GITHUB_OUTPUT
-          node .github/workflows/scripts/parse-test-results.js test_output.txt >> $GITHUB_OUTPUT
+          node .github/workflows/scripts/parse-test-results.js test_output.txt >> $GITHUB_OUTPUT 2>&1
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Comment PR with Test Results
         if: ${{ always() }}
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: ${{ steps.parse-results.outputs.test_results }}
+          message: |
+            ${{ steps.parse-results.outputs.test_results }}

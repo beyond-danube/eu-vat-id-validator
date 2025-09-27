@@ -8,8 +8,8 @@ import {
 } from "./types"
 
 const DEFAULT_CONFIG: Required<ValidationOptions> = {
-    timeout: 10000,
-    retryDelay: 1000,
+    timeout: 2000,
+    retryDelay: 100,
     fullResponse: true,
 }
 

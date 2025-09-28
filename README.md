@@ -45,7 +45,11 @@ Library handles this case with configurable retry. Defaults to 2 secondns of tot
 ```typescript
 (async () => {
 
-    const isVatNumberValid = await validateVatNumber('DE', '123456789', { fullResponse: false, retryDelay: 500, timeout: 10000 })
+    const isVatNumberValid = await validateVatNumber('DE', '123456789', {
+        fullResponse: false,
+        retryDelay: 500,
+        timeout: 10000
+    })
     console.log(isVatNumberValid)
 
 })()

@@ -18,7 +18,27 @@ const FORTUNE_100_EU_COMPANIES: Company[] = [
         name: 'DHL Express',
         countryCode: 'DE',
         vatNumber: '814145736'
-    }
+    },
+    {
+        name: 'AbbVie AB',
+        countryCode: 'SE',
+        vatNumber: '556887565101'
+    },
+    {
+        name: 'Hilti Netherlands',
+        countryCode: 'NL',
+        vatNumber: '006181338B01'
+    },
+    {
+        name: 'Hilton S.L.',
+        countryCode: 'ES',
+        vatNumber: 'B28061976'
+    },
+    {
+        name: 'Cisco Systems Danmark',
+        countryCode: 'DK',
+        vatNumber: '20456078'
+    },
 ]
 
 

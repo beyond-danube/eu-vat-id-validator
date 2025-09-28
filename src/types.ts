@@ -18,13 +18,13 @@ export interface VatValidationResponse {
 export interface ValidationOptions {
     /** 
      * Request timeout in milliseconds 
-     * @default 10000 
+     * @default 2000 
      */
     timeout?: number
     
     /** 
      * Delay between retry attempts in milliseconds 
-     * @default 1000 
+     * @default 100 
      */
     retryDelay?: number
     

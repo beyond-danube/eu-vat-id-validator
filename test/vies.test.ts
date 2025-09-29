@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
-import { checkViesServiceAvailable, validateVatNumber } from '../src/index.js'
-import { EU_COUNTRIES } from '../src/types.js'
+import { checkViesServiceAvailable, validateVatNumber } from '../src/index'
+import { EU_COUNTRIES } from '../src/types'
 
 function randomElement<T>(input: Array<T>): T {
     return input[Math.floor(Math.random() * FORTUNE_100_EU_COMPANIES.length)]

@@ -1,6 +1,6 @@
 {
     "name": "eu-vat-id-validator",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "TypeScript wrapper library for EU VAT ID validation using the VIES REST API",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

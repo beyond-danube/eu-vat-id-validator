@@ -1,3 +1,5 @@
+import { ERRORS_MAP } from "./data/errors-map"
+
 export const EU_COUNTRIES = [
     'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'EL', 'ES', 'FI', 'FR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK', 'XI'
 
@@ -63,6 +65,15 @@ export class VatValidationError extends Error {
         super(message)
         this.name = 'VatValidationError'
         this.errorDetails = errorDetails
+
+        if(this.errorDetails?.errorWrappers) {
+            for (const errorWrapper of this.errorDetails.errorWrappers) {
+                if(!errorWrapper.message) {
+                    errorWrapper.message = ERRORS_MAP[errorWrapper.error as keyof typeof ERRORS_MAP] ?? 'n/a'
+                }
+            }
+        }
+
         Object.setPrototypeOf(this, VatValidationError.prototype);
     }
 }

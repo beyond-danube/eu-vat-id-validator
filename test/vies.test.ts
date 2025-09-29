@@ -93,3 +93,52 @@ describe('Service Available', () => {
         assert.ok(result)
     })
 })
+
+describe('Invalid country code input validation', () => {
+    
+    test('Exception on invalid country input', async () => {
+        
+        await assert.rejects(
+            async () => {
+                await validateVatNumber('XX', '123456789')
+            },
+            {
+                name: 'VatValidationError',
+                message: /Country code 'XX' is not supported/
+            }
+        )
+
+        await assert.rejects(
+            async () => {
+                await validateVatNumber('US', '123456789')
+            },
+            {
+                name: 'VatValidationError',
+                message: /Country code 'US' is not supported/
+            }
+        )
+
+        await assert.rejects(
+            async () => {
+                await checkViesServiceAvailable('XX')
+            },
+            {
+                name: 'VatValidationError',
+                message: /Country code 'XX' is not supported/
+            }
+        )
+    })
+
+    test('Validation pass on lowecase country code', async() => {
+
+
+        const randomNotValidCompany: Company = {
+            countryCode: randomElement(EU_COUNTRIES).toLowerCase(),
+            vatNumber: '123456789'
+        }
+
+        const result = await validateVatNumber(randomNotValidCompany.countryCode, randomNotValidCompany.vatNumber)
+
+        assert.ok(!result.valid)
+    })
+})

@@ -11,7 +11,8 @@
     ],
     "scripts": {
         "build": "tsc",
-        "test": "npm run build && node --test dist/test/*.js"
+        "build:test": "tsc -p tsconfig.test.json",
+        "test": "npm run build:test && node --test dist/test/*.js"
     },
     "keywords": [
         "vat",

@@ -30,6 +30,13 @@ function combineErrorMessageAndError(message: string, errorDetails: ViesError) {
     return `${message}\n\n${errorDetailsMessage}`
 }
 
+function validateCountryInput(countryCode: string) {
+    // Validate country code against supported countries
+    if (!EU_COUNTRIES.includes(countryCode.toUpperCase())) {
+        throw new VatValidationError(`Country code '${countryCode}' is not supported.\nSupported countries: ${EU_COUNTRIES.join(', ')}`)
+    }
+}
+
 export async function validateVatNumber(countryCode: string, vatNumber: string): Promise<VatValidationResponse>
 export async function validateVatNumber(countryCode: string, vatNumber: string, options: ValidationOptions & { fullResponse: false }): Promise<boolean>
 export async function validateVatNumber(countryCode: string, vatNumber: string, options: ValidationOptions & { fullResponse?: true }): Promise<VatValidationResponse>
@@ -43,10 +50,7 @@ export async function validateVatNumber(
 ): Promise<VatValidationResponse | boolean> {
     const config = { ...DEFAULT_CONFIG, ...options }
     
-    // Validate country code against supported countries
-    if (!EU_COUNTRIES.includes(countryCode)) {
-        throw new VatValidationError(`Country code '${countryCode}' is not supported.\nSupported countries: ${EU_COUNTRIES.join(', ')}`)
-    }
+    validateCountryInput(countryCode)
     
     const request = {
         countryCode: countryCode,
@@ -107,9 +111,7 @@ export async function validateVatNumber(
 
 export async function checkViesServiceAvailable(countryCode: string): Promise<boolean> {
 
-    if (!EU_COUNTRIES.includes(countryCode)) {
-        throw new VatValidationError(`Country code '${countryCode}' is not supported.\nSupported countries: ${EU_COUNTRIES.join(', ')}`)
-    }
+    validateCountryInput(countryCode)
 
     const response = await fetch(BASE_URL_CHECK)
 
